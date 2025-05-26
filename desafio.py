@@ -285,9 +285,12 @@ def iniciar_batalha3(vida_sandubinha, inventario):
         penalidade_estilingue = False
         atordoamento = False
         usoestilingue = 0
+        turnos_atordoados = 0
         historico_batalha = []
         numero_secreto_dragao = random.randint(1, 12)
         numero_secreto_sandubinha = random.randint(1, vida_atual)
+        
+    
 
         estado_original = {
             "guia": guia, 
@@ -307,7 +310,7 @@ def iniciar_batalha3(vida_sandubinha, inventario):
         inventario.append("Estilingue mágico")
 
         def rodada_sandubinha():
-            nonlocal vida_dragao, penalidade_faturamentus, usoestilingue, penalidade_estilingue, atordoamento,vida_atual
+            nonlocal vida_dragao, penalidade_faturamentus, usoestilingue, penalidade_estilingue, atordoamento,vida_atual, turnos_atordoados
             dano = 0
             n = numeros_sorteados_por_rodada
             numeros = [] # Adiciona uma lista vazia para não causar dano, antes de +3 usos
@@ -326,6 +329,7 @@ def iniciar_batalha3(vida_sandubinha, inventario):
                     if acertou_pedra: #Caso estilingue acerte, atordoa o dragão
                         print("Você acertou o Dragão com a pedra do Estilingue! Ele está atordoado e agora pode ser atingido!")
                         atordoamento = True
+                        
                     else:
                         print(f"Você usou o Estilingue ({usoestilingue}/3), mas errou a pedra.") #Quantidade de usos do estilingue
 
@@ -339,8 +343,14 @@ def iniciar_batalha3(vida_sandubinha, inventario):
                 else: #Dragão atordoado, pode receber dano
                     n = numeros_sorteados_por_rodada
                     numeros = [random.randint(1, 12) for _ in range(n)]
+                    print(f"[DEBUG] Número secreto do dragão: {numero_secreto_dragao}")
+                    print(f"[DEBUG] Números sorteados: {numeros}")
                     dano = numero_secreto_dragao * numeros.count(numero_secreto_dragao)
+                    print(f"[DEBUG] Dano calculado: {dano}")
                     vida_dragao -= dano
+                    print(f"[DEBUG] Vida do dragão após ataque: {vida_dragao}")
+                    atordoamento = False
+                    
             else:
         # Sem estilingue — só pode causar dano se dragão já estiver atordoado
                 numeros = [random.randint(1, 12) for _ in range(n)]
@@ -350,6 +360,7 @@ def iniciar_batalha3(vida_sandubinha, inventario):
                 else:
                     dano = numero_secreto_dragao * numeros.count(numero_secreto_dragao)
                     vida_dragao -= dano
+                    atordoamento = False
 
             if faturamentus and dano == 0:
                 penalidade_faturamentus = True
@@ -357,9 +368,18 @@ def iniciar_batalha3(vida_sandubinha, inventario):
             return ("Sandubinha", numeros, dano, numero_secreto_dragao)
 
         def rodada_dragao():
-            nonlocal vida_atual, penalidade_faturamentus, penalidade_estilingue, atordoamento
+            nonlocal vida_atual, penalidade_faturamentus, penalidade_estilingue, atordoamento, turnos_atordoados
             numeros = [random.randint(1, 9) for _ in range(numeros_sorteados_por_rodada_dragao)]
             dano = numero_secreto_sandubinha * numeros.count(numero_secreto_sandubinha)
+
+            if atordoamento:
+                turnos_atordoados += 1
+                print("O Dragão está atordoado e não pode atacar nesta rodada!")
+                if turnos_atordoados > 1:
+                    print("O Dragão recuperou o fôlego pode atacar nesta rodada!")
+                    atordoamento = False
+                    turnos_atordoados = 0
+                return ("Dragão", numeros, 0, numero_secreto_sandubinha)
 
             if penalidade_faturamentus and dano > 0:
                 print("O dragão aproveitou do seu erro e te deu mais dano que o normal!")
@@ -368,11 +388,6 @@ def iniciar_batalha3(vida_sandubinha, inventario):
 
             if penalidade_estilingue:
                 print("O dragão ri de você após se acertar com o próprio estilingue!")
-
-            if atordoamento:
-                print("O Dragão não pode atacar nesta rodada!")
-                atordoamento = False
-                return ("Dragão", numeros, 0, numero_secreto_sandubinha)
 
             vida_atual -= dano
             return ("Dragão", numeros, dano, numero_secreto_sandubinha)
@@ -394,6 +409,7 @@ def iniciar_batalha3(vida_sandubinha, inventario):
                     historico_batalha.append(resultado)
                     turno = 1
                 elif escolha == "2":
+                    item_usado = False
                     if not inventario:
                         print("Você não tem itens disponíveis agora.")
                         continue
@@ -408,21 +424,33 @@ def iniciar_batalha3(vida_sandubinha, inventario):
                         if 0 <= index < len(inventario):
                             item = inventario[index] 
                             if item == "Guia de atendimento":
-                                print("Você usou o Guia de atendimento e se fortaleceu!\n")
-                                guia = True
-                                print("Você já usou o Guia de atendimento.\n")
+                                if guia:
+                                    print("Você já usou o Guia de atendimento.\n")
+                                else :
+                                    print("Você usou o Guia de atendimento e se fortaleceu!\n")
+                                    guia = True
+                                    item_usado = True
                             elif item == "Faturamentus":
-                                print("Você usou o Faturamentus e se fortaleceu!\n")
-                                faturamentus = True
-                                print("Você já usou o Faturamentus.\n")
+                                if faturamentus:
+                                    print("Você já usou o Faturamentus.\n")
+                                else: 
+                                    print("Você usou o Faturamentus e se fortaleceu!\n")
+                                    faturamentus = True
+                                    item_usado = True
+                                                                
                             elif item == "Estilingue mágico":
-                                print("Você usou o Estilingue mágico e se fortaleceu!\n")
-                                estilingue = True
-                                print("Você já usou o Estilingue mágico.\n")
+                                if estilingue:
+                                    print("Você já usou o Estilingue mágico.\n")
+                                else:
+                                    print("Você usou o Estilingue mágico e se fortaleceu!\n")
+                                    estilingue = True
+                                    item_usado = True
+                    
                             else:
                                 print(f"Você usou {item}, mas nada aconteceu.\n")
 
-                            turno = 1
+                            if item_usado:
+                                turno = 1
                             
                         else:
                             print("Item inválido.")
@@ -578,6 +606,15 @@ def iniciar_batalha4(vida_sandubinha, inventario):
             numeros = [random.randint(1, 9) for _ in range(numeros_sorteados_por_rodada_estatua)]
             dano = numero_secreto_sandubinha * numeros.count(numero_secreto_sandubinha)
 
+            if atordoamento:
+                turnos_atordoados += 1
+                print("A estátua está atordoada e não pode atacar nesta rodada!")
+                if turnos_atordoados > 1:
+                    print("A estátua recuperou o fôlego pode atacar nesta rodada!")
+                    atordoamento = False
+                    turnos_atordoados = 0
+                return ("Estátua", numeros, 0, numero_secreto_sandubinha)
+
             if penalidade_faturamentus and dano > 0:
                 print("A Estátua aproveitou do seu erro e te deu mais dano que o normal!")
                 dano += 2
@@ -616,6 +653,7 @@ def iniciar_batalha4(vida_sandubinha, inventario):
                     historico_batalha.append(resultado)
                     turno = 1
                 elif escolha == "2":
+                    item_usado = False
                     if not inventario:
                         print("Você não tem itens disponíveis agora.")
                         continue
@@ -630,25 +668,42 @@ def iniciar_batalha4(vida_sandubinha, inventario):
                         if 0 <= index < len(inventario):
                             item = inventario[index] 
                             if item == "Guia de atendimento":
-                                print("Você usou o Guia de atendimento e se fortaleceu!\n")
-                                guia = True
-                                print("Você já usou o Guia de atendimento.\n")
+                                if guia:
+                                    print("Você já usou o Guia de atendimento.\n")
+                                else:
+                                    print("Você usou o Guia de atendimento e se fortaleceu!\n")
+                                    guia = True
+                                    item_usado = True
+                            
                             elif item == "Faturamentus":
-                                print("Você usou o Faturamentus e se fortaleceu!\n")
-                                faturamentus = True
-                                print("Você já usou o Faturamentus.\n")
+                                if faturamentus:
+                                    print("Você já usou o Faturamentus.\n")
+                                else:
+                                    print("Você usou o Faturamentus e se fortaleceu!\n")
+                                    faturamentus = True
+                                    item_usado = True
+                                
                             elif item == "Estilingue mágico":
-                                print("Você usou o Estilingue mágico e se fortaleceu!\n")
-                                estilingue = True
-                                print("Você já usou o Estilingue mágico.\n")
+                                if estilingue:
+                                    print("Você já usou o Estilingue mágico.\n")
+                                else:
+                                    print("Você usou o Estilingue mágico e se fortaleceu!\n")
+                                    estilingue = True
+                                    item_usado = True
+                                
                             elif item == "Azah Transmissão":
-                                print("Você usou o Azah Transmissão e se fortaleceu!\n")
-                                azah = True
-                                print("Você já usou o Azah Transmissão.\n")
+                                if azah:
+                                    print("Você já usou o Azah Transmissão.\n")
+                                else:
+                                    print("Você usou o Azah Transmissão e se fortaleceu!\n")
+                                    azah = True
+                                    item_usado = True
+                                
                             else:
                                 print(f"Você usou {item}, mas nada aconteceu.\n")
 
-                            turno = 1
+                            if item_usado:
+                                turno = 1
                             
                         else:
                             print("Item inválido.")
@@ -694,6 +749,47 @@ def iniciar_batalha4(vida_sandubinha, inventario):
             print("O mundo foi destruído por Glozium, uma fatalidade terrível... Fim de jogo!\n")
             
             return False, vida_atual
+        
+def narrativa_final(vida_sandubinha, inventario):
+    print("Sandubinha sente que no topo da Torre de Contas a Receber reside Glozium, é uma habilidade dos Analyticaes di Glosium.")
+    print("Você alcançou a maestria necessária para forjar a Espada ZG, você quer forjá-la?\n")
+    escolha = input("Digite 'sim' para forjar a espada ou 'não' para desistir: ").strip().lower()
+    if escolha == "sim":
+        if "Colar da estátua sagrada" and "Faturamentus" and "Azah Transmissão" and "Estilingue mágico" and "Guia de Atendimento" in inventario:
+            print("Você usou o Colar da estátua sagrada para forjar a Espada ZG!")
+            inventario.append("Espada ZG")
+        else:
+            print("Você não tem todos os itens, não pode forjar a Espada ZG.")
+    elif escolha == "não":
+        print("Você decidiu não forjar a Espada ZG.")
+    else:
+        print("Escolha inválida")
+    print("Sandubinha entra na sala do chefe e se depara com a presença arrepiante de Glozium sentado no trono.\n")
+
+    pulo = input("Você deseja pular o diálogo entre Sandubinha e Glozium? Digite 'sim' ou 'não'\n").strip().lower()
+    if pulo == "sim":
+        print("Você pulou o diálogo.")
+        return vida_sandubinha, inventario
+    elif pulo == "não":
+        print("Glozium - Um rato invadiu meu recinto; talvez sirva de alimento para meus escravos\n")
+        print("Sandubinha - Então você é Glozium? Não é mais aterrorizante que as criaturas apodrecidas que encontrei.\n")
+        print("Glozium - ha ha ha ha! que petulante.")
+        print("Chegou a época, mas mandaram um pobre coitado; péssima ideia.\n")
+        print("Sandubinha - Vou te destruir, Glozium, e garantir sua aniquilação total e permanente!\n")
+        print("E o que um garoto com cabeça de hambúrguer pode fazer contra um monstro milenar, que presenciou eventos tão singulares,")
+        print("que caminhou sobre a superfície de vulcões e subjugou a humanidade?\n")
+
+        print("\nSandubinha lança sua espada girando no ar que fere o monstro e retorna a sua mão.\n")
+
+        print("Sandubinha - Não subestime alguém com cabeça de hambúrguer, sou um descendente dos Analycaties di Glosium.")
+        print("Te procurei em cada canto do inferno para reduzir você a Zero.\n")
+
+        print("Glozium - Interessante, aceito seu pedido de batalha!")
+
+
+
+
+
         
 
 def main():
