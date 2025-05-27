@@ -64,7 +64,14 @@ def iniciar_batalha(vida_sandubinha, inventario):
             if escolha == "1":
                 resultado = rodada_sandubinha()
                 historico_batalha.append(resultado)
+                personagem, numeros, dano, numero_secreto = resultado
+                print(f"\nVocê atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
+                if dano > 0:
+                    print(f"Você causou {dano} de dano ao monstro!")
+                else:
+                    print("Seu ataque não causou dano ao monstro.")
                 turno = 1
+                
             elif escolha == "2":
                 print("Você desistiu da batalha!")
                 print("\nHistórico da batalha:")
@@ -79,10 +86,18 @@ def iniciar_batalha(vida_sandubinha, inventario):
             print("\n--- Turno do Monstro ---")
             resultado = rodada_monstro()
             historico_batalha.append(resultado)
+            personagem, numeros, dano, numero_secreto = resultado
+            print(f"\nMonstro atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
+            if dano > 0:
+                print(f" {dano} recebido!")
+            else:
+                print("Nenhum dano recebido.")
+                    
             turno = 0
 
     if vida_monstro <= 0:
         print("\nVocê venceu! O Monstro foi derrotado!\n")
+        input("Pressione Enter para continuar...\n")
         print("Histórico da batalha:\n")
         for personagem, numeros, dano, numero_secreto in historico_batalha:
             print(f"{personagem} atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
@@ -96,7 +111,7 @@ def iniciar_batalha(vida_sandubinha, inventario):
         
         return True, vida_atual
     else:
-        print("Você foi derrotado pelo Monstro...")
+        print("\nVocê foi derrotado pelo Monstro...")
         input("Pressione Enter para continuar...\n")
         print("Histórico da batalha:\n")
         for personagem, numeros, dano, numero_secreto in historico_batalha:
@@ -140,14 +155,11 @@ def iniciar_batalha2(vida_sandubinha, inventario):
         guia = False
         historico_batalha = []
 
-        estado_original = {
-        "guia": guia,
-        }
-
-        def restaurar_estado():
-            nonlocal guia
-            guia = estado_original["guia"]
-            print("\nTodos os efeitos de itens foram removidos. Sandubinha voltou ao estado normal.\n")
+        def listar_itens_equipados():
+            itens_equipados = []
+            if guia: itens_equipados.append("Guia de atendimento")
+            
+            return itens_equipados
 
         def rodada_sandubinha():
                 nonlocal vida_urso, guia
@@ -186,6 +198,12 @@ def iniciar_batalha2(vida_sandubinha, inventario):
                 if escolha == "1":
                     resultado = rodada_sandubinha()
                     historico_batalha.append(resultado)
+                    personagem, numeros, dano, numero_secreto = resultado
+                    print(f"\nVocê atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
+                    if dano > 0:
+                        print(f"Você causou {dano} de dano ao Urso!")
+                    else:
+                        print("Seu ataque não causou dano ao Urso.")
                     turno = 1
                 elif escolha == "2":
                     item_usado = False
@@ -218,10 +236,29 @@ def iniciar_batalha2(vida_sandubinha, inventario):
                             print("Item inválido.")
                     continue
                 elif escolha == "3":
-                    restaurar_estado()
-                    print("Você desequipou seus itens.")
-                    turno = 1
-                    continue
+                    itens_equipados = listar_itens_equipados()
+                    if not itens_equipados:
+                        print("Você não tem itens equipados no momento.")
+                        continue
+
+                    print("Itens equipados:")
+                    
+                    for i, item in enumerate(itens_equipados):
+                        print(f"{i + 1}. {item}")
+
+                    escolha_item = input("Escolha o número do item que deseja desequipar (ou Enter para voltar): ").strip()
+                    if escolha_item == "":
+                        continue
+                    elif escolha_item.isdigit():
+                        index = int(escolha_item) - 1
+                        if 0 <= index < len(itens_equipados):
+                            item = itens_equipados[index]
+                            if item == "Guia de atendimento":
+                                guia = False                        
+                        turno = 1
+                    else:
+                        print("Escolha inválida.")
+                        continue
                 elif escolha == "4":
                     print("Você desistiu da batalha!")
                     for personagem, numeros, dano, numero_secreto in historico_batalha:
@@ -234,6 +271,13 @@ def iniciar_batalha2(vida_sandubinha, inventario):
                 print("\n--- Turno do Urso ---")
                 resultado = rodada_urso()
                 historico_batalha.append(resultado)
+                personagem, numeros, dano, numero_secreto = resultado
+                print(f"\nUrso atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
+                if dano > 0:
+                    print(f"{dano} recebido!")
+                else:
+                    print("Nenhum dano recebido.")
+                
                 turno = 0
 
         if vida_urso <= 0:
@@ -306,18 +350,12 @@ def iniciar_batalha3(vida_sandubinha, inventario):
         
     
 
-        estado_original = {
-            "guia": guia, 
-            "faturamentus": faturamentus,
-            "estilingue": estilingue
-        }
-
-        def restaurar_estado():
-            nonlocal guia, faturamentus, estilingue
-            guia = estado_original["guia"]
-            faturamentus = estado_original["faturamentus"]
-            estilingue = estado_original["estilingue"]
-            print("\nTodos os efeitos de itens foram removidos. Sandubinha voltou ao estado normal.\n")
+        def listar_itens_equipados():
+            itens_equipados = []
+            if guia: itens_equipados.append("Guia de atendimento")
+            if faturamentus: itens_equipados.append("Faturamentus")
+            if estilingue: itens_equipados.append("Estilingue mágico")
+            return itens_equipados
         
         
 
@@ -419,6 +457,12 @@ def iniciar_batalha3(vida_sandubinha, inventario):
                 if escolha == "1":
                     resultado = rodada_sandubinha()
                     historico_batalha.append(resultado)
+                    personagem, numeros, dano, numero_secreto = resultado
+                    print(f"\nVocê atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
+                    if dano > 0:
+                        print(f"Você causou {dano} de dano ao Dragão!")
+                    else:
+                        print("Seu ataque não causou dano ao Dragão.")
                     turno = 1
                 elif escolha == "2":
                     item_usado = False
@@ -468,10 +512,31 @@ def iniciar_batalha3(vida_sandubinha, inventario):
                             print("Item inválido.")
                     continue                                                                 
                 elif escolha == "3":
-                    restaurar_estado()
-                    print("Você desequipou seus itens.")
-                    turno = 1
-                    continue
+                    itens_equipados = listar_itens_equipados()
+                    if not itens_equipados:
+                        print("Você não tem itens equipados no momento.")
+                        continue
+                    print("Itens equipados:")
+                    for i, item in enumerate(itens_equipados):
+                        print(f"{i + 1}. {item}")
+                    escolha_item = input("Escolha o número do item que deseja desequipar (ou Enter para voltar): ").strip()
+                    if escolha_item == "":
+                        print("Você não escolheu nenhum item.")
+                    if escolha_item.isdigit():
+                        index = int(escolha_item) - 1
+                        if 0 <= index < len(itens_equipados):
+                            item = itens_equipados[index]
+                            if item == "Guia de atendimento":
+                                guia = False
+                            elif item == "Faturamentus":
+                                faturamentus = False
+                            elif item == "Estilingue mágico":
+                                estilingue = False
+                            print(f"{item} foi desequipado com sucesso!")
+                            turno = 1
+                        else:
+                            print("Escolha inválida!")
+                        continue
                 elif escolha == "4":
                     print("Você desistiu da batalha!\n")
                     print("\nHistórico da batalha:")
@@ -485,7 +550,14 @@ def iniciar_batalha3(vida_sandubinha, inventario):
                 print("\n--- Turno do Dragão ---\n")
                 resultado = rodada_dragao()
                 historico_batalha.append(resultado)
+                personagem, numeros, dano, numero_secreto = resultado
+                print(f"\nDragão atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
+                if dano > 0:
+                    print(f"{dano} recebido!")
+                else:
+                    print("Nenhum dano recebido.")
                 turno = 0
+
 
         if vida_dragao <= 0:
             print("\nVocê venceu! O Dragão foi derrotado!\n")
@@ -563,20 +635,13 @@ def iniciar_batalha4(vida_sandubinha, inventario):
         numero_secreto_estatua = random.randint(1, 25)
         numero_secreto_sandubinha = random.randint(1, vida_atual)
 
-        estado_original = {
-            "guia": guia, 
-            "faturamentus": faturamentus,
-            "estilingue": estilingue,
-            "azah": azah
-        }
-
-        def restaurar_estado():
-            nonlocal guia, faturamentus, estilingue, azah
-            guia = estado_original["guia"]
-            faturamentus = estado_original["faturamentus"]
-            estilingue = estado_original["estilingue"]
-            azah = estado_original["azah"]
-            print("\nTodos os efeitos de itens foram removidos. Sandubinha voltou ao estado normal.\n")
+        def listar_itens_equipados():
+                itens_equipados = []
+                if guia: itens_equipados.append("Guia de atendimento")
+                if faturamentus: itens_equipados.append("Faturamentus")
+                if estilingue: itens_equipados.append("Estilingue mágico")
+                if azah: itens_equipados.append("Azah Transmissão")
+                return itens_equipados
         
         def rodada_sandubinha():
             nonlocal vida_estatua, penalidade_faturamentus, usoestilingue, penalidade_estilingue, atordoamento, penalidade_azah
@@ -606,7 +671,7 @@ def iniciar_batalha4(vida_sandubinha, inventario):
                     if usoestilingue > 3:
                         penalidade_estilingue = True
                         print("Você não pode usar o Estilingue mágico mais de 3 vezes, tomou um de dano.")
-                        vida_sandubinha -= 1    
+                        vida_atual -= 1    
                 elif dano > 0:
                         atordoamento = True
                         print("Você atordoou a estatua!")
@@ -669,6 +734,12 @@ def iniciar_batalha4(vida_sandubinha, inventario):
                 if escolha == "1":
                     resultado = rodada_sandubinha()
                     historico_batalha.append(resultado)
+                    personagem, numeros, dano, numero_secreto = resultado
+                    print(f"\nVocê atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
+                    if dano > 0:
+                        print(f"Você causou {dano} de dano a Estátua!")
+                    else:
+                        print("Seu ataque não causou dano a Estátua.")
                     turno = 1
                 elif escolha == "2":
                     item_usado = False
@@ -726,9 +797,39 @@ def iniciar_batalha4(vida_sandubinha, inventario):
                             print("Item inválido.")
                     continue                                                                 
                 elif escolha == "3":
-                    restaurar_estado()
-                    print("Você desequipou seus itens.")
-                    turno = 1
+                    itens_equipados = listar_itens_equipados()
+                    if not itens_equipados:
+                        print("Você não tem itens equipados no momento.")
+                        continue
+
+                    print("Itens equipados:")
+                    for i, item in enumerate(itens_equipados):
+                        print(f"{i + 1}. {item}")
+
+                    escolha_item = input("Escolha o número do item que deseja desequipar (ou Enter para voltar): ").strip()
+                    if escolha_item == "":
+                        continue
+                    elif escolha_item.isdigit():
+                        index = int(escolha_item) - 1
+                        if 0 <= index < len(itens_equipados):
+                            item = itens_equipados[index]
+                            if item == "Guia de atendimento":
+                                guia = False
+                            elif item == "Faturamentus":
+                                faturamentus = False
+                            elif item == "Estilingue mágico":
+                                estilingue = False
+                            elif item == "Azah Transmissão":
+                                azah = False
+                            print(f"{item} foi desequipado com sucesso!")
+                            turno = 1
+                        else:
+                            print("Escolha inválida.")
+                    else:
+                        print("Escolha inválida.")
+                    continue
+
+                    
                 elif escolha == "4":
                     print("Você desistiu da batalha!\n")
                     print("\nHistórico da batalha:")
@@ -742,6 +843,12 @@ def iniciar_batalha4(vida_sandubinha, inventario):
                 print("\n--- Turno da Estátua ---\n")
                 resultado = rodada_estatua()
                 historico_batalha.append(resultado)
+                personagem, numeros, dano, numero_secreto = resultado
+                print(f"\nEstátua atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
+                if dano > 0:
+                    print(f"{dano} recebido!")
+                else:
+                    print("Nenhum dano recebido.")
                 turno = 0
 
         if vida_estatua <= 0:
@@ -755,10 +862,10 @@ def iniciar_batalha4(vida_sandubinha, inventario):
             print("Sandubinha - É assustador olhar para essa estátua despedaçada e ver a forma do último herói\n")
             if "Colar da estátua sagrada" not in inventario:
                 print("\nSandubinha ganha o artefato [Colar da estátua sagrada]\n")
-                print("Formato: Colar")
-                print("Esse artefato permite que você sorteie 10 números por rodada, ao invés de um.")   
-                print("Porém, sempre que utilizado em uma rodada, receberá 3 de dano.")
                 inventario.append("Colar da estátua sagrada")
+            print("Formato: Colar")
+            print("Esse artefato permite que você sorteie 10 números por rodada, ao invés de um.")   
+            print("Porém, sempre que utilizado em uma rodada, receberá 3 de dano.\n")
             return True, vida_atual
         else:
             print("Você foi derrotado pela Estátua do último herói...")
@@ -772,16 +879,18 @@ def iniciar_batalha4(vida_sandubinha, inventario):
             return False, vida_atual
         
 def narrativa_final(inventario):
-    print("Sandubinha sente que no topo da Torre de Contas a Receber reside Glozium, é uma habilidade dos Analyticaes di Glosium.")
+    print("Sandubinha sente que no topo da Torre de Contas a Receber reside Glozium, é uma habilidade dos Analyticaes di Glosium.\n")
     print("Você alcançou a maestria necessária para forjar a Espada ZG, você quer forjá-la?\n")
+
     escolha = input("Digite 'sim' para forjar a espada ou 'não' para continuar sem ela: ").strip().lower() #strip() remove espaços extras e lower() torna tudo minúsculo
     if escolha == "sim":
-        itens_necessarios = ["Colar da estátua sagrada", "Faturamentus", "Azah Transmissão", "Estilingue mágico", "Guia de Atendimento"]
+        itens_necessarios = ["Colar da estátua sagrada", "Faturamentus", "Azah Transmissão", "Estilingue mágico", "Guia de atendimento"]
         if all(item in inventario for item in itens_necessarios):
-            print("Você usou todos seus itens para formar a poderosa Espada ZG!")
+            inventario.clear()  # Limpa o inventário
+            inventario.append("Espada ZG")
+            print("Você usou todos seus itens para formar a poderosa Espada ZG!\n")
             print("Formato: Espada")
             print("Essa espada faz com que você possa sortear 40 números de uma só vez a cada ataque.")
-            inventario.append("Espada ZG")
         else:
             print("Você não tem todos os itens, não pode forjar a Espada ZG.")
     elif escolha == "não":
@@ -831,6 +940,7 @@ def iniciar_batalhafinal(vida_sandubinha, inventario):
         azah = False
         colar_estatua_sagrada = False
         espada_zg = False
+        espada_zg_usada = False
         penalidade_faturamentus = False
         penalidade_estilingue = False
         penalidade_azah = False
@@ -841,27 +951,19 @@ def iniciar_batalhafinal(vida_sandubinha, inventario):
         numero_secreto_glozium = random.randint(1, 100)
         numero_secreto_sandubinha = random.randint(1, vida_atual)
 
-        estado_original = {
-            "guia": guia,
-            "faturamentus": faturamentus,
-            "estilingue": estilingue,
-            "azah": azah,
-            "colar_estatua_sagrada": colar_estatua_sagrada,
-            "espada_zg": espada_zg
-        }
-
-        def restaurar_estado():
-            nonlocal guia, faturamentus, estilingue, azah, espada_zg
-            guia = estado_original["guia"]
-            faturamentus = estado_original["faturamentus"]
-            estilingue = estado_original["estilingue"]
-            azah = estado_original["azah"]
-            espada_zg = estado_original["espada_zg"]
-            print("\nTodos os efeitos de itens foram removidos. Sandubinha voltou ao estado normal.\n")
+        def listar_itens_equipados():
+            itens_equipados = []
+            if guia: itens_equipados.append("Guia de atendimento")
+            if faturamentus: itens_equipados.append("Faturamentus")
+            if estilingue: itens_equipados.append("Estilingue mágico")
+            if azah: itens_equipados.append("Azah Transmissão")
+            if colar_estatua_sagrada: itens_equipados.append("Colar da estátua sagrada")
+            if espada_zg: itens_equipados.append("Espada ZG")
+            return itens_equipados
 
 
         def rodada_sandubinha():
-            nonlocal vida_glozium, penalidade_faturamentus, usoestilingue, penalidade_estilingue, atordoamento, penalidade_azah
+            nonlocal vida_glozium, penalidade_faturamentus, usoestilingue, penalidade_estilingue, atordoamento, penalidade_azah, colar_estatua_sagrada, espada_zg
 
             n = numeros_sorteados_por_rodada
             if guia:
@@ -874,8 +976,10 @@ def iniciar_batalhafinal(vida_sandubinha, inventario):
                 n += 10
             if colar_estatua_sagrada:
                 n += 10
+                colar_estatua_sagrada = False
             if espada_zg:
-                n = 40       
+                n = 40   
+                espada_zg = False    
 
             numeros = [random.randint(1, 100) for _ in range(n)]
             dano = numero_secreto_glozium * numeros.count(numero_secreto_glozium)
@@ -890,7 +994,7 @@ def iniciar_batalhafinal(vida_sandubinha, inventario):
                     if usoestilingue > 3:
                         penalidade_estilingue = True
                         print("Você não pode usar o Estilingue mágico mais de 3 vezes, tomou um de dano.")
-                        vida_sandubinha -= 1    
+                        vida_atual -= 1    
                 elif dano > 0:
                         atordoamento = True
                         print("Você atordoou a estatua!")
@@ -955,6 +1059,12 @@ def iniciar_batalhafinal(vida_sandubinha, inventario):
                 if escolha == "1":
                     resultado = rodada_sandubinha()
                     historico_batalha.append(resultado)
+                    personagem, numeros, dano, numero_secreto = resultado
+                    print(f"\nVocê atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
+                    if dano > 0:
+                        print(f"Você causou {dano} de dano a Glozium!")
+                    else:
+                        print("Seu ataque não causou dano a Glozium.")
                     turno = 1
                 elif escolha == "2":
                     item_usado = False
@@ -1017,6 +1127,7 @@ def iniciar_batalhafinal(vida_sandubinha, inventario):
                                 else:
                                     print("Você usou a Espada ZG e se fortaleceu!\n")
                                     espada_zg = True
+                                    espada_zg_usada = True
                                     item_usado = True
 
                             if not any([guia, faturamentus, estilingue, azah, colar_estatua_sagrada, espada_zg]):
@@ -1029,9 +1140,40 @@ def iniciar_batalhafinal(vida_sandubinha, inventario):
                             print("Item inválido.")
                     continue                                                                 
                 elif escolha == "3":
-                    restaurar_estado(guia)
-                    print("Você desequipou seus itens.")
-                    turno = 1
+                    itens_equipados = listar_itens_equipados()
+                    if not itens_equipados:
+                        print("Você não tem itens equipados no momento.")
+                        continue
+
+                    print("Itens equipados:")
+                    for i, item in enumerate(itens_equipados):
+                        print(f"{i + 1}. {item}")
+
+                    escolha_item = input("Escolha o número do item que deseja desequipar (ou Enter para voltar): ").strip()
+                    if escolha_item == "":
+                        continue
+                    elif escolha_item.isdigit():
+                        index = int(escolha_item) - 1
+                        if 0 <= index < len(itens_equipados):
+                            item = itens_equipados[index]
+                            if item == "Guia de atendimento":
+                                guia = False
+                            elif item == "Faturamentus":
+                                faturamentus = False
+                            elif item == "Estilingue mágico":
+                                estilingue = False
+                            elif item == "Azah Transmissão":
+                                azah = False
+                            elif item == "Colar da estátua sagrada":
+                                colar_estatua_sagrada = False
+                            elif item == "Espada ZG":
+                                espada_zg = False
+                            print(f"{item} foi desequipado com sucesso!")
+                            turno = 1
+                        else:
+                            print("Escolha inválida.")
+                    else:
+                        print("Escolha inválida.")
                     continue
                 elif escolha == "4":
                     print("Você desistiu da batalha!\n")
@@ -1046,17 +1188,21 @@ def iniciar_batalhafinal(vida_sandubinha, inventario):
                 print("\n--- Turno da Estátua ---\n")
                 resultado = rodada_glozium()
                 historico_batalha.append(resultado)
+                personagem, numeros, dano, numero_secreto = resultado
+                print(f"\nGlozium atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
+                if dano > 0:
+                    print(f"{dano} recebido!")
+                else:
+                    print("Nenhum dano recebido.")
                 turno = 0
 
         if vida_glozium <= 0:
-            if espada_zg:
+            if espada_zg_usada:
                 print("\nVocê venceu! Glozium foi derrotado!\n")
                 print("Histórico da batalha:\n")
                 for personagem, numeros, dano, numero_secreto in historico_batalha:
                     print(f"{personagem} atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
-                    input("Pressione Enter para continuar...\n")
-
-                print("Sandubinha - Finalmente, Glozium está eliminado por completo, irei retomar a minha família\n")
+                print("\nSandubinha - Finalmente, Glozium está eliminado por completo, irei retomar a minha família\n")
                 print("O Herói derrotou Glozium, o mundo agora poderá voltar a seus tempos de alegria. Muito obrigado, herói!\n")
                 print("Fim de jogo!")
                 return True, vida_atual
@@ -1065,7 +1211,7 @@ def iniciar_batalhafinal(vida_sandubinha, inventario):
                 print("Histórico da batalha:\n")
                 for personagem, numeros, dano, numero_secreto in historico_batalha:
                     print(f"{personagem} atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
-                    input("Pressione Enter para continuar...\n")
+                    
                     
                 print("Glozium - Você me derrotou com armas tão simples, impressionante, mas irei retornar no ano seguinte.\n")
                 input("Pressione Enter para continuar...\n")
@@ -1083,6 +1229,7 @@ def iniciar_batalhafinal(vida_sandubinha, inventario):
                 input("Pressione Enter para continuar...\n")
 
                 print("O herói derrotou Glozium ao custo de sua alma, o mundo seguirá normalmente por mais 1 ano...Fim de jogo!\n")
+                return True, vida_atual
             
         else:
             print("Você foi derrotado por Glozium...")
@@ -1127,8 +1274,7 @@ def main():
                             batalhas_vencidas += 1
                             vida_total = vida_sandubinha + 2 * batalhas_vencidas
                             inventario_global = narrativa_final(inventario_global)
-                            venceu_final, vida_total = iniciar_batalhafinal(vida_total, inventario_global)
-                            
+                            venceu_final, vida_total = iniciar_batalhafinal(vida_total, inventario_global)                            
                             if venceu_final:
                                 break
                         else:
