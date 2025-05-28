@@ -15,12 +15,16 @@ def narrativa_segundoato():
 
     print("Sandubinha - Que tipo de situação é essa?")
     input("Pressione Enter para continuar...\n")
+
     print("Um monstro em forma de urso surge e diz a Sandubinha")
     input("Pressione Enter para continuar...\n")
+
     print("Urso Sangrento - Finalmente diversão, esses anciões só sabem ficar anotando essas coisas inúteis.")
     print("Vamos lutar heroizinho!")
     input("Pressione Enter para continuar...\n")
+
     print("Sandubinha - Criatura desagradável, não me deu tempo nem de tomar uma água, então bora nessa!")
+    input("Pressione Enter para começar a batalha")
 
 def iniciar_batalha2(vida_sandubinha, inventario):
         vida_urso = 6
@@ -32,7 +36,7 @@ def iniciar_batalha2(vida_sandubinha, inventario):
         guia = False
         historico_batalha = []
 
-        def listar_itens_equipados():
+        def listar_itens_equipados(): #Função para listar os itens equipados, caso a tag seja True, o item entra na lista
             itens_equipados = []
             if guia: itens_equipados.append("Guia de atendimento")
             
@@ -41,7 +45,7 @@ def iniciar_batalha2(vida_sandubinha, inventario):
         def rodada_sandubinha():
                 nonlocal vida_urso, guia
                 
-                if guia:
+                if guia: #Funcionalidade do item
                     n = 2
                 else:
                     n = numeros_sorteados_por_rodada
@@ -88,15 +92,15 @@ def iniciar_batalha2(vida_sandubinha, inventario):
                         print("Você não tem itens disponíveis agora.")
                         continue
                     print("Seus itens:")
-                    for i, item in enumerate(inventario):
+                    for i, item in enumerate(inventario): #Mostra os itens com índice +1, pois por padrão inicia no 0
                         print(f"{i + 1}. {item}")
                     item_escolhido = input("Escolha o número do item para usar (ou pressione Enter para voltar): ")
                     if item_escolhido == "":
                         continue
-                    if item_escolhido.isdigit():
-                        index = int(item_escolhido) - 1
-                        if 0 <= index < len(inventario):
-                            item = inventario[index] 
+                    if item_escolhido.isdigit(): #Verifica se somente números estão sendo passados
+                        index = int(item_escolhido) - 1 #Retira o 1 que tinha sido somado no índice
+                        if 0 <= index < len(inventario): #Confirma o índice do número na lista   
+                            item = inventario[index] #Obs: não usar .pop pois exclui totalmente o item do inventario
                             if item == "Guia de atendimento":
                                 if guia:
                                     print("Você já usou o Guia de atendimento.")
@@ -120,7 +124,7 @@ def iniciar_batalha2(vida_sandubinha, inventario):
 
                     print("Itens equipados:")
                     
-                    for i, item in enumerate(itens_equipados):
+                    for i, item in enumerate(itens_equipados): #Mostra os itens que estão equipados
                         print(f"{i + 1}. {item}")
 
                     escolha_item = input("Escolha o número do item que deseja desequipar (ou Enter para voltar): ").strip()

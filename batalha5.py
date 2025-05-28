@@ -9,7 +9,7 @@ def narrativa_final(inventario):
         itens_necessarios = ["Colar da estátua sagrada", "Faturamentus", "Azah Transmissão", "Estilingue mágico", "Guia de atendimento"]
         if all(item in inventario for item in itens_necessarios):
             inventario.clear()  # Limpa o inventário
-            inventario.append("Espada ZG")
+            inventario.append("Espada ZG") # Adiciona Espada ZG no inventário
             print("Você usou todos seus itens para formar a poderosa Espada ZG!\n")
             print("Formato: Espada")
             print("Essa espada faz com que você possa sortear 40 números de uma só vez a cada ataque.")
@@ -20,10 +20,12 @@ def narrativa_final(inventario):
     else:
         print("Escolha inválida")
     print("Sandubinha entra na sala do chefe e se depara com a presença arrepiante de Glozium sentado no trono.\n")
+    input("Pressione Enter para começar a Batalha")
 
     pulo = input("Você deseja pular o diálogo entre Sandubinha e Glozium? Digite 'sim' ou 'não'\n").strip().lower()
     if pulo == "sim":
         print("Você pulou o diálogo.")
+        input("Pressione Enter para começar a Batalha")
         return inventario
     elif pulo == "não":
         print("Glozium - Um rato invadiu meu recinto; talvez sirva de alimento para meus escravos\n")
@@ -49,6 +51,7 @@ def narrativa_final(inventario):
         input("Pressione Enter para continuar...\n")
 
         print("Glozium - Interessante, aceito seu pedido de batalha!")
+        input("Pressione Enter para começar a Batalha")
         return inventario
 
 def iniciar_batalhafinal(vida_sandubinha, inventario):
@@ -62,7 +65,7 @@ def iniciar_batalhafinal(vida_sandubinha, inventario):
         azah = False
         colar_estatua_sagrada = False
         espada_zg = False
-        espada_zg_usada = False
+        espada_zg_usada = False #Nova tag para saber se foi usada a espada ZG no combate
         penalidade_faturamentus = False
         penalidade_estilingue = False
         penalidade_azah = False
@@ -249,7 +252,7 @@ def iniciar_batalhafinal(vida_sandubinha, inventario):
                                 else:
                                     print("Você usou a Espada ZG e se fortaleceu!\n")
                                     espada_zg = True
-                                    espada_zg_usada = True
+                                    espada_zg_usada = True #Ativa a Tag
                                     item_usado = True
 
                             if not any([guia, faturamentus, estilingue, azah, colar_estatua_sagrada, espada_zg]):
@@ -319,7 +322,7 @@ def iniciar_batalhafinal(vida_sandubinha, inventario):
                 turno = 0
 
         if vida_glozium <= 0:
-            if espada_zg_usada:
+            if espada_zg_usada: #Caso tenha sido utilizado no combate mostra esse diálogo, caso não, mostra o else
                 print("\nVocê venceu! Glozium foi derrotado!\n")
                 print("Histórico da batalha:\n")
                 for personagem, numeros, dano, numero_secreto in historico_batalha:

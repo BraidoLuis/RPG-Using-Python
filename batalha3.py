@@ -23,6 +23,7 @@ def narrativa_terceiroato(inventario):
     input("Pressione Enter para continuar...\n")
 
     print("Sandubinha - Você também está preso a um destino que não escolheu, vou te libertar!")
+    input("Pressione Enter para começar a batalha")
     return inventario
 
 def iniciar_batalha3(vida_sandubinha, inventario):
@@ -44,7 +45,7 @@ def iniciar_batalha3(vida_sandubinha, inventario):
         
     
 
-        def listar_itens_equipados():
+        def listar_itens_equipados(): #Novos itens equipados
             itens_equipados = []
             if guia: itens_equipados.append("Guia de atendimento")
             if faturamentus: itens_equipados.append("Faturamentus")
@@ -128,7 +129,7 @@ def iniciar_batalha3(vida_sandubinha, inventario):
             if penalidade_faturamentus and dano > 0:
                 print("O dragão aproveitou do seu erro e te deu mais dano que o normal!")
                 dano += 2
-            penalidade_faturamentus = False
+            penalidade_faturamentus = False #Penalidade é removida mesmo o dragão não causando dano
 
             if penalidade_estilingue:
                 print("O dragão ri de você após se acertar com o próprio estilingue!")

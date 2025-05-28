@@ -11,7 +11,7 @@ def narrativa_quartoato(vida_sandubinha):
     if escolha == "1":
         print("Sandubinha voa até o topo da torre em segurança.")
     elif escolha == "2":
-        vida_sandubinha -= 3
+        vida_sandubinha -= 3 # Sandubinha inicia a próxima batalha com -3 de vida do total acumulado das batalhas anteriores
         print("Sandubinha vai a pé e perde 3 pontos de vida.")
     else:
         print("Escolha inválida.")
@@ -27,6 +27,7 @@ def narrativa_quartoato(vida_sandubinha):
     input("Pressione Enter para continuar...\n")
 
     print("Sandubinha - Uma estátua na forma do último herói, por que?")
+    input("Pressione Enter para começar a batalha")
 
     return vida_sandubinha
 
@@ -61,7 +62,7 @@ def iniciar_batalha4(vida_sandubinha, inventario):
             nonlocal vida_estatua, penalidade_faturamentus, usoestilingue, penalidade_estilingue, atordoamento, penalidade_azah
 
             n = numeros_sorteados_por_rodada
-            if guia:
+            if guia: #Funcionalidades dos itens
                 n = 2           
             if faturamentus:
                 n = 4
@@ -276,7 +277,7 @@ def iniciar_batalha4(vida_sandubinha, inventario):
             print("Sandubinha - É assustador olhar para essa estátua despedaçada e ver a forma do último herói\n")
             if "Colar da estátua sagrada" not in inventario:
                 print("\nSandubinha ganha o artefato [Colar da estátua sagrada]\n")
-                inventario.append("Colar da estátua sagrada")
+                inventario.append("Colar da estátua sagrada") #Adiciona Colar da estátua sagrada ao inventario
             print("Formato: Colar")
             print("Esse artefato permite que você sorteie 10 números por rodada, ao invés de um.")   
             print("Porém, sempre que utilizado em uma rodada, receberá 3 de dano.\n")

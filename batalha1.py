@@ -1,9 +1,6 @@
 import random
 
-vida_sandubinha = 5
-
-
-def narrativa_inicial():
+def narrativa_inicial():  #Narrativa do primeiro ato
     print("Sandubinha - Então você é meu primeiro desafio nessa floresta encantada?\n")
     input("Pressione Enter para continuar...\n")
 
@@ -25,11 +22,11 @@ def narrativa_inicial():
     print("Venha monstro!\n")
     input("Pressione Enter para começar a batalha!\n")
 
-def iniciar_batalha(vida_sandubinha, inventario):
+def iniciar_batalha(vida_sandubinha, inventario): #Batalha do primeiro ato
     vida_monstro = 3
     vida_atual = vida_sandubinha
     numeros_sorteados_por_rodada = 1
-    numero_secreto_monstro = random.randint(1, 3)
+    numero_secreto_monstro = random.randint(1, 3) #randint = Função para calcular valores num intervalo definido
     numero_secreto_sandubinha = random.randint(1, vida_sandubinha)
     historico_batalha = []
 
@@ -62,7 +59,7 @@ def iniciar_batalha(vida_sandubinha, inventario):
 
             if escolha == "1":
                 resultado = rodada_sandubinha()
-                historico_batalha.append(resultado)
+                historico_batalha.append(resultado) #Adiciona o resultado da batalha no histórico
                 personagem, numeros, dano, numero_secreto = resultado
                 print(f"\nVocê atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
                 if dano > 0:
@@ -76,7 +73,7 @@ def iniciar_batalha(vida_sandubinha, inventario):
                 print("\nHistórico da batalha:")
                 for personagem, numeros, dano, numero_secreto in historico_batalha:
                     print(f"{personagem} atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
-                return False, vida_atual
+                return False, vida_atual 
                 
             else:
                 print("Opção inválida!")
@@ -101,10 +98,9 @@ def iniciar_batalha(vida_sandubinha, inventario):
         for personagem, numeros, dano, numero_secreto in historico_batalha:
             print(f"{personagem} atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
         input("Pressione Enter para continuar...\n")
-        if "Guia de atendimento" not in inventario:
+        if "Guia de atendimento" not in inventario: #Adiciona Guia de atendimento aos itens
             print("Formato: Pergaminho")
-            print("\nProcessus Ministerii - Muito Obrigado, tome o artefato [Guia de atendimento] e vá para o próximo desafio\n")
-            
+            print("\nProcessus Ministerii - Muito Obrigado, tome o artefato [Guia de atendimento] e vá para o próximo desafio")
             print("Esse artefato permite que você sorteie dois números por rodada, ao invés de um")
             inventario.append("Guia de atendimento")
         

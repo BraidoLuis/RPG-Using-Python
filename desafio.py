@@ -4,6 +4,8 @@ from batalha3 import narrativa_terceiroato, iniciar_batalha3
 from batalha4 import narrativa_quartoato, iniciar_batalha4
 from batalha5 import narrativa_final, iniciar_batalhafinal
 
+#Importa todas as narrativas e batalhas dos arquivos
+
 vida_sandubinha = 5
 batalhas_vencidas = 0
 inventario_global = []
@@ -43,8 +45,10 @@ def main():
                             venceu_final, vida_total = iniciar_batalhafinal(vida_total, inventario_global)                            
                             if venceu_final:
                                 break
+                            else:
+                                print("\nVocê foi derrotado na batalha final...")
                         else:
-                            print("Você foi derrotado na batalha final...")
+                            print("\nVocê foi derrotado no quarto ato...")
                     else:
                         print("\nVocê foi derrotado no terceiro ato...")
                 else:
@@ -53,7 +57,7 @@ def main():
                 print("\nVocê foi derrotado no primeiro ato...")
 
             print("\nDeseja jogar novamente? (s/n)")
-            if input("> ").lower() != "s":
+            if input("> ").lower() != "s": #.lower garante que seja minúsculo como recebe o código
                 print("Fim de jogo. Obrigado por jogar!")
                 break
 
