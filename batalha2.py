@@ -175,7 +175,7 @@ def iniciar_batalha2(vida_sandubinha, inventario):
             for personagem, numeros, dano, numero_secreto in historico_batalha:
                 print(f"{personagem} atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
             
-            return True
+            return True, vida_atual
             
         else:
             print("\nVocê foi derrotado pelo Urso...")
@@ -185,4 +185,4 @@ def iniciar_batalha2(vida_sandubinha, inventario):
             print("Histórico da batalha:")
             for personagem, numeros, dano, numero_secreto in historico_batalha:
                 print(f"{personagem} atacou com os números {numeros} | Número secreto do oponente: {numero_secreto} | Dano causado: {dano}")
-            return False
+            return False, vida_atual

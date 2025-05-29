@@ -67,11 +67,9 @@ def iniciar_batalha4(vida_sandubinha, inventario):
             if faturamentus:
                 n = 4
             if estilingue:
-                n = int(vida_estatua/2) + numeros_sorteados_por_rodada
+                n = int(vida_estatua/2) 
             if azah:
-                n += 10
-            else:
-                n = numeros_sorteados_por_rodada            
+                n += 10         
 
             numeros = [random.randint(1, 25) for _ in range(n)]
             dano = numero_secreto_estatua * numeros.count(numero_secreto_estatua)
@@ -81,16 +79,42 @@ def iniciar_batalha4(vida_sandubinha, inventario):
                 penalidade_faturamentus = True
                 
             if estilingue:
-                if dano == 0:
+                if not atordoamento: #Antes de atordoar, adiciona 1 aos usos
                     usoestilingue += 1
-                    if usoestilingue > 3:
-                        penalidade_estilingue = True
-                        print("Você não pode usar o Estilingue mágico mais de 3 vezes, tomou um de dano.")
-                        vida_atual -= 1    
-                elif dano > 0:
+                    n = int(vida_estatua / 2)
+                    numeros = [random.randint(1, 12) for _ in range(n)]
+                    acertou_pedra = numero_secreto_estatua in numeros
+
+                    if acertou_pedra: #Caso estilingue acerte, atordoa o dragão
+                        print("Você acertou a estátua com a pedra do Estilingue! Ele está atordoado!")
                         atordoamento = True
-                        print("Você atordoou a estatua!")
-                        print("A estatua não pode atacar nesta rodada!") 
+                        
+                    else:
+                        print(f"Você usou o Estilingue ({usoestilingue}/3), mas errou a pedra.") #Quantidade de usos do estilingue
+
+                    if usoestilingue > 3: #Caso passe de 3 usos, perde 1 de vida
+                        print("Você usou o Estilingue mais de 3 vezes e se feriu com o recuo! Perdeu 1 de vida.")
+                        vida_atual -= 1
+                        penalidade_estilingue = True
+                        
+
+                    return ("Sandubinha", numeros, 0, numero_secreto_estatua)
+                else:
+                    n = numeros_sorteados_por_rodada
+                    if guia:
+                        n = 2
+                    if faturamentus:
+                        n = 4
+                    numeros = [random.randint(1, 12) for _ in range(n)]
+                    dano = numero_secreto_estatua * numeros.count(numero_secreto_estatua)
+                    vida_estatua -= dano
+                    atordoamento = False
+                    
+            else:
+                numeros = [random.randint(1, 12) for _ in range(n)]
+                dano = numero_secreto_estatua * numeros.count(numero_secreto_estatua)
+                vida_estatua -= dano
+                atordoamento = False
             
             if azah and dano == 0:
                 penalidade_azah = True
