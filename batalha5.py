@@ -115,10 +115,10 @@ def iniciar_batalhafinal(vida_sandubinha, inventario):
                 if not atordoamento: #Antes de atordoar, adiciona 1 aos usos
                     usoestilingue += 1
                     n = int(vida_glozium / 2)
-                    numeros = [random.randint(1, 12) for _ in range(n)]
+                    numeros = [random.randint(1, 100) for _ in range(n)]
                     acertou_pedra = numero_secreto_glozium in numeros
 
-                    if acertou_pedra: #Caso estilingue acerte, atordoa o dragão
+                    if acertou_pedra: #Caso estilingue acerte, atordoa 
                         print("Você acertou a estátua com a pedra do Estilingue! Ele está atordoado!")
                         atordoamento = True
                         
@@ -133,18 +133,13 @@ def iniciar_batalhafinal(vida_sandubinha, inventario):
 
                     return ("Sandubinha", numeros, 0, numero_secreto_glozium)
                 else:
-                    n = numeros_sorteados_por_rodada
-                    if guia:
-                        n = 2
-                    if faturamentus:
-                        n = 4
-                    numeros = [random.randint(1, 12) for _ in range(n)]
+                    numeros = [random.randint(1, 100) for _ in range(n)]
                     dano = numero_secreto_glozium * numeros.count(numero_secreto_glozium)
                     vida_glozium -= dano
                     atordoamento = False
                     
             else:
-                numeros = [random.randint(1, 12) for _ in range(n)]
+                numeros = [random.randint(1, 100) for _ in range(n)]
                 dano = numero_secreto_glozium * numeros.count(numero_secreto_glozium)
                 vida_glozium -= dano
                 atordoamento = False

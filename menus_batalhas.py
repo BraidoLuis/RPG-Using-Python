@@ -5,10 +5,8 @@ def menu_batalha1(vida_sandubinha, inventario_global):
 
     while True:
         print("\n--- MENU PRINCIPAL ---")
-        print("1. Iniciar jornada")
-        print("2. Enfrentar Glozium agora")
-        print("3. Sair do jogo")
-
+        print("1. Iniciar jornada\n2. Enfrentar Glozium agora\n3. Sair do jogo")
+        
         escolha = input("Escolha uma opção: ")
 
         if escolha == "1":
@@ -33,9 +31,7 @@ def menu_batalha1(vida_sandubinha, inventario_global):
 def menu_batalha(vida_sandubinha, inventario_global):
     while True:
         print("\n--- MENU PRINCIPAL ---")
-        print("1. Continuar jornada")
-        print("2. Enfrentar Glozium agora")
-        print("3. Sair do jogo")
+        print("1. Continuar jornada\n2. Enfrentar Glozium agora\n3. Sair do jogo")
 
         escolha = input("Escolha uma opção: ")
 
